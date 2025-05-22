@@ -1,0 +1,3 @@
+# Hashes of file build rules.
+6ee13fdb12ed3f7a91102d6ab8d182f7 /Users/gracewilson/dev/libs/uWebSockets/uSockets/libusockets.a
+a66a08f6b459fd6e4e54621c187700df CMakeFiles/usockets_build
