@@ -1,15 +1,46 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+const BOARD_SIZE = 8;
+const COLORS = ["black", "yellow", "pink", "blue", "green", "purple"];
+
 interface GameState {
-    board: number[][];
+    board: string[][];
     currentPlayer: number;
     winner: number | null;
     aiThinking: boolean;
     socketConnected: boolean;
 }
 
+const generateBoard = () => {
+    const board: string[][] = [];
+    for (let row = 0; row < BOARD_SIZE; row++) {
+        const currentRow: string[] = [];
+
+        for (let col = 0; col < BOARD_SIZE; col++) {
+            const disallowed = new Set<string>();
+            // Check top
+            if (row > 0) {
+                disallowed.add(board[row - 1][col]);
+            }
+            // Check left
+            if (col > 0) {
+                disallowed.add(currentRow[col - 1]);
+            }
+            // Choose a random allowed color
+            const allowedColors = COLORS.filter(
+                (color) => !disallowed.has(color)
+            );
+            const color =
+                allowedColors[Math.floor(Math.random() * allowedColors.length)];
+            currentRow.push(color);
+        }
+        board.push(currentRow);
+    }
+    return board;
+};
+
 const initialState: GameState = {
-    board: Array(10).fill(Array(10).fill(0)),
+    board: generateBoard(),
     currentPlayer: 1,
     winner: null,
     aiThinking: false,
@@ -20,7 +51,7 @@ const gameSlice = createSlice({
     name: "game",
     initialState,
     reducers: {
-        setBoard(state, action: PayloadAction<number[][]>) {
+        setBoard(state, action: PayloadAction<string[][]>) {
             state.board = action.payload;
         },
         setCurrentPlayer(state, action: PayloadAction<number>) {

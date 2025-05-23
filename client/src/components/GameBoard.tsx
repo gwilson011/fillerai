@@ -7,6 +7,15 @@ export const GameBoard = () => {
     const winner = useAppSelector((state) => state.game.winner);
     const { sendMove } = useWebSocket();
 
+    const colorMap: Record<string, string> = {
+        black: "bg-[#383838]",
+        pink: "bg-[#d24259]",
+        yellow: "bg-[#d8bf1d]",
+        blue: "bg-[#3f98d2]",
+        green: "bg-[#8cb64a]",
+        purple: "bg-[#5f458c]",
+    };
+
     const handleClick = (row: number, col: number) => {
         sendMove({
             action: "playerMove",
@@ -20,14 +29,13 @@ export const GameBoard = () => {
     return (
         <div>
             {board.map((row, rIdx) => (
-                <div key={rIdx}>
+                <div className="flex" key={rIdx}>
                     {row.map((tile, cIdx) => (
-                        <button
+                        <div
                             key={cIdx}
                             onClick={() => handleClick(rIdx, cIdx)}
-                        >
-                            {tile}
-                        </button>
+                            className={`w-[50px] h-[50px] cursor-pointer ${colorMap[tile]}`}
+                        />
                     ))}
                 </div>
             ))}
