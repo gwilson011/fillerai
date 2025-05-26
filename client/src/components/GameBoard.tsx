@@ -1,11 +1,10 @@
 import { useAppSelector } from "../store/hooks.ts";
 import { useWebSocket } from "../hooks/useWebSocket.ts";
+import { ColorSelect } from "./colorSelect.tsx";
 
 export const GameBoard = () => {
     const board = useAppSelector((state) => state.game.board);
-    const currentPlayer = useAppSelector((state) => state.game.currentPlayer);
-    const winner = useAppSelector((state) => state.game.winner);
-    const { sendMove } = useWebSocket();
+    const state = useAppSelector((state) => state.game);
 
     const colorMap: Record<string, string> = {
         black: "bg-[#383838]",
@@ -16,29 +15,40 @@ export const GameBoard = () => {
         purple: "bg-[#5f458c]",
     };
 
-    const handleClick = (row: number, col: number) => {
-        sendMove({
-            action: "playerMove",
-            currentPlayer: currentPlayer,
-            winner: winner == null ? 0 : winner, //TODO: handle winner logic
-            move: { row, col },
-            board: board,
-        });
-    };
-
     return (
-        <div>
-            {board.map((row, rIdx) => (
-                <div className="flex" key={rIdx}>
-                    {row.map((tile, cIdx) => (
-                        <div
-                            key={cIdx}
-                            onClick={() => handleClick(rIdx, cIdx)}
-                            className={`w-[50px] h-[50px] cursor-pointer ${colorMap[tile]}`}
-                        />
+        <div className="flex flex-row justify-center items-center h-screen gap-10">
+            <div className="flex flex-col items-center">
+                <div>
+                    {board.map((row, rIdx) => (
+                        <div className="flex" key={rIdx}>
+                            {row.map((tile, cIdx) => (
+                                <div
+                                    key={cIdx}
+                                    className={`w-[50px] h-[50px] ${colorMap[tile]}`}
+                                />
+                            ))}
+                        </div>
                     ))}
                 </div>
-            ))}
+                <div className="flex justify-center mt-4">
+                    <ColorSelect state={state} />
+                </div>
+            </div>
+            <div className="mt-4 text-center">
+                <span className="">
+                    {state.winner != 1 ? (
+                        <>
+                            {state.winner == 1 ? (
+                                <div>PLAYER WINS</div>
+                            ) : (
+                                <div>NO WINNER</div>
+                            )}
+                        </>
+                    ) : (
+                        <div>AI WINS</div>
+                    )}
+                </span>
+            </div>
         </div>
     );
 };

@@ -1,15 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { GameState } from "../types/gamestate.ts";
 
 const BOARD_SIZE = 8;
 const COLORS = ["black", "yellow", "pink", "blue", "green", "purple"];
-
-interface GameState {
-    board: string[][];
-    currentPlayer: number;
-    winner: number | null;
-    aiThinking: boolean;
-    socketConnected: boolean;
-}
 
 const generateBoard = () => {
     const board: string[][] = [];
@@ -39,11 +32,16 @@ const generateBoard = () => {
     return board;
 };
 
+const BOARD = generateBoard();
+
 const initialState: GameState = {
-    board: generateBoard(),
+    board: BOARD,
     currentPlayer: 1,
-    winner: null,
-    aiThinking: false,
+    winner: -1, // -1 means no winner yet
+    playerBlob: [[7, 0]],
+    aiBlob: [[0, 7]],
+    playerColor: BOARD[7][0],
+    aiColor: BOARD[0][7],
     socketConnected: false,
 };
 
@@ -60,8 +58,17 @@ const gameSlice = createSlice({
         setWinner(state, action: PayloadAction<number>) {
             state.winner = action.payload;
         },
-        setThinking(state, action: PayloadAction<boolean>) {
-            state.aiThinking = action.payload;
+        setPlayerBlob(state, action: PayloadAction<[number, number][]>) {
+            state.playerBlob = action.payload;
+        },
+        setAiBlob(state, action: PayloadAction<[number, number][]>) {
+            state.aiBlob = action.payload;
+        },
+        setPlayerColor(state, action: PayloadAction<string>) {
+            state.playerColor = action.payload;
+        },
+        setAiColor(state, action: PayloadAction<string>) {
+            state.aiColor = action.payload;
         },
         setSocketConnected(state, action: PayloadAction<boolean>) {
             state.socketConnected = action.payload;
@@ -73,7 +80,10 @@ export const {
     setBoard,
     setCurrentPlayer,
     setWinner,
-    setThinking,
+    setPlayerBlob,
+    setAiBlob,
+    setPlayerColor,
+    setAiColor,
     setSocketConnected,
 } = gameSlice.actions;
 

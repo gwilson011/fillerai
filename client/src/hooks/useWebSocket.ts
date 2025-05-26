@@ -6,6 +6,10 @@ import {
     setCurrentPlayer,
     setWinner,
     setSocketConnected,
+    setPlayerBlob,
+    setAiBlob,
+    setPlayerColor,
+    setAiColor,
 } from "../store/gameSplice.ts";
 
 export const useWebSocket = () => {
@@ -18,9 +22,15 @@ export const useWebSocket = () => {
         ws.current.onopen = () => dispatch(setSocketConnected(true));
         ws.current.onmessage = (event) => {
             const data = JSON.parse(event.data);
+            console.log(`CLIENT: Message received at ${Date.now()}ms`, data);
             dispatch(setBoard(data.board));
             dispatch(setCurrentPlayer(data.currentPlayer));
             dispatch(setWinner(data.winner));
+            dispatch(setPlayerBlob(data.playerBlob));
+            dispatch(setAiBlob(data.aiBlob));
+            dispatch(setPlayerColor(data.playerColor));
+            dispatch(setAiColor(data.aiColor));
+            dispatch(setSocketConnected(true));
         };
 
         return () => ws.current?.close();
