@@ -1,4 +1,0 @@
-/Users/gracewilson/fillerai/server/build/CMakeFiles/usockets_build.dir
-/Users/gracewilson/fillerai/server/build/CMakeFiles/filler_server.dir
-/Users/gracewilson/fillerai/server/build/CMakeFiles/edit_cache.dir
-/Users/gracewilson/fillerai/server/build/CMakeFiles/rebuild_cache.dir
